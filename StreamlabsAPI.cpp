@@ -15,13 +15,33 @@ bool StreamlabsAPI::connect(const char* socketToken) {
     webSocket.beginSSL(SL_HOSTNAME, SL_PORT, queryParams.c_str(), SL_FINGERPRINT);
 }
 
-
 void StreamlabsAPI::followTwitchEvent(std::function<void (const char * payload)> func) {
     events["follow"] = func;
 }
 
+void StreamlabsAPI::subscriptionsTwitchEvent(std::function<void (const char * payload)> func) {
+    events["subscription"] = func;
+}
+
+void StreamlabsAPI::hostTwitchEvent(std::function<void (const char * payload)> func) {
+    events["host"] = func;
+}
+
+void StreamlabsAPI::bitsTwitchEvent(std::function<void (const char * payload)> func) {
+    events["bits"] = func;
+}
+
+void StreamlabsAPI::raidsTwitchEvent(std::function<void (const char * payload)> func) {
+    events["raid"] = func;
+}
+
+void StreamlabsAPI::donationEvent(std::function<void (const char * payload)> func) {
+    events["donation"] = func;
+}
+
+StaticJsonDocument<10000> doc;
 void StreamlabsAPI::event(const char * payload, size_t length) {
-    StaticJsonDocument<200> doc;
+    // FIXME remove deserialized and parse string to get the type
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
         Serial.print("deserializeJson() failed: ");
