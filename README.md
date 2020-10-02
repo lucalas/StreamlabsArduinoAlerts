@@ -1,4 +1,4 @@
-# Streamlabs Arduino Alerts
+# Streamlabs Arduino Alerts [![Build Status](https://travis-ci.com/lucalas/StreamlabsArduinoAlerts.svg?branch=master)](https://travis-ci.com/lucalas/StreamlabsArduinoAlerts)
 A work in progress library to connect to your Streamlabs account and catch all the Twitch events.
 
 ## Twitch event catchable
