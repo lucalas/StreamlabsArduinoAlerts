@@ -1,3 +1,4 @@
+
 # Streamlabs Arduino Alerts [![Build Status](https://travis-ci.com/lucalas/StreamlabsArduinoAlerts.svg?branch=master)](https://travis-ci.com/lucalas/StreamlabsArduinoAlerts)
 A work in progress library to connect to your Streamlabs account and catch all the Twitch events.
 
@@ -19,7 +20,16 @@ A work in progress library to connect to your Streamlabs account and catch all t
  - ATmega328 with enc28j60 (ATmega branch)
  - ATmega2560 with Ethernet Shield (ATmega branch)
  - ATmega2560 with enc28j60 (ATmega branch)
- - 
+ 
+## Add library
+Best thing is to use the Arduino Library Manager.
+
+Go to Sketch > Include Library > Manage Libraries.
+Install WebSockets by Markus Sattler
+Install SocketIoClient
+Install StreamlabsArduinoAlerts
+Select Sketch > Include Library > StreamlabsArduinoAlerts
+
 ## Methods
 #### connect(socket_token)
 Method to connect to Streamlabs server, required [socket token](https://streamlabs.readme.io/docs/sockettoken).
