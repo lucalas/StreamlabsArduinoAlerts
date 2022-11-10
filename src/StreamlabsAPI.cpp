@@ -21,6 +21,10 @@ void StreamlabsAPI::subscriptionsTwitchEvent(std::function<void (const char * pa
     events["subscription"] = func;
 }
 
+void StreamlabsAPI::resubscriptionsTwitchEvent(std::function<void (const char * payload)> func) {
+    events["resub"] = func;
+}
+
 void StreamlabsAPI::hostTwitchEvent(std::function<void (const char * payload)> func) {
     events["host"] = func;
 }

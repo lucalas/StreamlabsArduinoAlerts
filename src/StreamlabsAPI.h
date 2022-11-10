@@ -2,7 +2,7 @@
 #include <map>
 #include <SocketIOclient.h>
 
-#if defined(DEBUG_ESP_PORT) || defined(DEBUG_STREAMLABS)
+#ifdef DEBUG_ESP_PORT
 #define DEBUG_STREAMLABS_ALERTS(...)               \
     {                                       \
         DEBUG_ESP_PORT.printf(__VA_ARGS__); \
@@ -30,6 +30,7 @@ class StreamlabsAPI {
         void connect(const char* socketToken);
         void followTwitchEvent(std::function<void (const char * payload)> func);
         void subscriptionsTwitchEvent(std::function<void (const char * payload)> func);
+        void resubscriptionsTwitchEvent(std::function<void (const char * payload)> func);
         void hostTwitchEvent(std::function<void (const char * payload)> func);
         void bitsTwitchEvent(std::function<void (const char * payload)> func);
         void raidsTwitchEvent(std::function<void (const char * payload)> func);

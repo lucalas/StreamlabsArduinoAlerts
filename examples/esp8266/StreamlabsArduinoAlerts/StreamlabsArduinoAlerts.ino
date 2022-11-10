@@ -27,8 +27,23 @@ void subscriptionEvent(const char * payload) {
   Serial.println(payload);
 }
 
+void resubscriptionEvent(const char * payload) {
+  Serial.print("got resubscriptionEvent message: ");
+  Serial.println(payload);
+}
+
+void hostEvent(const char * payload) {
+  Serial.print("got hostEvent message: ");
+  Serial.println(payload);
+}
+
 void bitsEvent(const char * payload) {
   Serial.print("got bitsEvent message: ");
+  Serial.println(payload);
+}
+
+void raidEvent(const char * payload) {
+  Serial.print("got raidEvent message: ");
   Serial.println(payload);
 }
 
@@ -57,7 +72,10 @@ void setup() {
 
     streamlabsAPI.followTwitchEvent(followerEvent);
     streamlabsAPI.subscriptionsTwitchEvent(subscriptionEvent);
+    streamlabsAPI.resubscriptionsTwitchEvent(resubscriptionEvent);
+    streamlabsAPI.hostTwitchEvent(hostEvent);
     streamlabsAPI.bitsTwitchEvent(bitsEvent);
+    streamlabsAPI.raidTwitchEvent(raidEvent);
     streamlabsAPI.donationEvent(donationsEvent);
     streamlabsAPI.connect(SOCKET_TOKEN);
 }
