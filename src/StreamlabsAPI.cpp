@@ -1,18 +1,16 @@
 #include "StreamlabsAPI.h"
-#include <ArduinoJson.h>
 
 
 void StreamlabsAPI::loop() {
     webSocket.loop();
 }
 
-bool StreamlabsAPI::connect(const char* socketToken) {
-    webSocket.on("event", std::bind(&StreamlabsAPI::event, this, std::placeholders::_1, std::placeholders::_2));    
-
+void StreamlabsAPI::connect(const char* socketToken) {
+    webSocket.onEvent(std::bind(&StreamlabsAPI::event, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     String queryParams = SL_DEFAULT_QUERYPARAMETES;
-    queryParams += "&token=";
-    queryParams += socketToken;
-    webSocket.beginSSL(SL_HOSTNAME, SL_PORT, queryParams.c_str(), SL_FINGERPRINT);
+    queryParams.concat("token=");
+    queryParams.concat(socketToken);
+    webSocket.beginSSL(SL_HOSTNAME, SL_PORT, queryParams.c_str());
 }
 
 void StreamlabsAPI::followTwitchEvent(std::function<void (const char * payload)> func) {
@@ -21,6 +19,10 @@ void StreamlabsAPI::followTwitchEvent(std::function<void (const char * payload)>
 
 void StreamlabsAPI::subscriptionsTwitchEvent(std::function<void (const char * payload)> func) {
     events["subscription"] = func;
+}
+
+void StreamlabsAPI::resubscriptionsTwitchEvent(std::function<void (const char * payload)> func) {
+    events["resub"] = func;
 }
 
 void StreamlabsAPI::hostTwitchEvent(std::function<void (const char * payload)> func) {
@@ -39,18 +41,22 @@ void StreamlabsAPI::donationEvent(std::function<void (const char * payload)> fun
     events["donation"] = func;
 }
 
-StaticJsonDocument<10000> doc;
-void StreamlabsAPI::event(const char * payload, size_t length) {
-    // FIXME remove deserialized and parse string to get the type
-    DeserializationError error = deserializeJson(doc, payload);
-    if (error) {
-        Serial.print("deserializeJson() failed: ");
-        return;
-    }
+void StreamlabsAPI::event(socketIOmessageType_t type, uint8_t * payload, size_t length) {
+    const char* data = reinterpret_cast<char*>(payload);
+    DEBUG_STREAMLABS_ALERTS("------STREAMLABS EVENT------\n");
+    DEBUG_STREAMLABS_ALERTS("SocketIO message type: %d\n", type);
+    DEBUG_STREAMLABS_ALERTS("SocketIO data: %s\n", data);
 
-    const char* type = doc["type"];
-	auto e = events.find(type);
+    String payloadS = String((char *) payload);
+    int startOfType = payloadS.indexOf("\"type\":\"");
+    int endOfType = payloadS.indexOf("\"", startOfType + 8);
+    String typeS = payloadS.substring(startOfType + 8, endOfType);
+
+    DEBUG_STREAMLABS_ALERTS("Streamlabs event type: %s\n", typeS.c_str());
+    DEBUG_STREAMLABS_ALERTS("-----------------------------\n");
+
+	auto e = events.find(typeS);
 	if(e != events.end()) {
-		e->second(payload);
+		e->second(data);
     }
 }
